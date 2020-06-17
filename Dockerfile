@@ -13,9 +13,11 @@ RUN pip install --upgrade pip
 
 # install selenium
 RUN pip install selenium
+RUN pip install requests
 
 # copy over source code
 COPY src /src
 WORKDIR /src
 
-CMD ["python3", "example.py"]
+# CMD ["python3", "example.py"]
+CMD ["python3", "recreation-gov.py"]
