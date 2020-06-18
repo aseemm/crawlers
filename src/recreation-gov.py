@@ -6,6 +6,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 import requests
 import json
+from datetime import datetime
 
 class test():
   def __init__(self):
@@ -17,11 +18,10 @@ class test():
     self.driver = webdriver.Chrome(options=chrome_options)
 
   # https://www.recreation.gov/api/search/campsites?start=0&size=1000&fq=asset_id:232447&start_date=2020-07-04T00%3A00%3A00.000Z&end_date=2020-07-07T00%3A00%3A00.000Z&include_unavailable=false
-
-
   # https://www.recreation.gov/api/ticket/availability/facility/300015?date=2020-07-14
 
-
+  # Yosemite National Park Ticketed Entry
+  # https://www.recreation.gov/ticket/facility/300015 
   # https://www.recreation.gov/api/ticket/availability/facility/300015/monthlyAvailabilitySummaryView?year=2020&month=09&inventoryBucket=FIT
   def yosemite_day_use_tickets(self, year, month):
     url = f'https://www.recreation.gov/api/ticket/availability/facility/300015/monthlyAvailabilitySummaryView?year={year}&month={month}&inventoryBucket=FIT'
@@ -30,7 +30,9 @@ class test():
     resp_json = resp.json()
 
     for date in resp_json["facility_availability_summary_view_by_local_date"]:
-      print(date, resp_json["facility_availability_summary_view_by_local_date"][date]["availability_level"])
+      if resp_json["facility_availability_summary_view_by_local_date"][date]["availability_level"] == "LOW":
+        date_in_datetime = datetime.strptime(date, "%Y-%m-%d")
+        print(date, "(", ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][date_in_datetime.weekday()], ")", resp_json["facility_availability_summary_view_by_local_date"][date]["availability_level"])
       
 automate = test()
 automate.yosemite_day_use_tickets("2020", "07")
