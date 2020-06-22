@@ -14,7 +14,13 @@ recreation_map = {
   'Yosemite Upper Pines': '232447',  
   'Yosemite Tuolumne Meadows': '232448',  
   'Yosemite North Pines': '232449',
-  'Yosemite Lower Pines': '232450',    
+  'Yosemite Lower Pines': '232450',
+  'Sequoia & Kings Canyon Lodgepole': '232461',
+  'Sequoia & Kings Canyon Dorst Creek': '232460',
+  'Sequoia & Kings Canyon Sunset': '232752',  
+  'Sequoia & Kings Canyon Potwisha': '249979',
+  'Death Valley Furnace Creek': '232496',
+  'Joshua Tree Indian Cove': '232472',              
 }
 
 class test():
@@ -40,9 +46,9 @@ class test():
       for date in resp_json["campsites"][campsite]["availabilities"]:
         if resp_json["campsites"][campsite]["availabilities"][date] not in ["Reserved", "Not Available", "Not Reservable Management"]:
           date_in_datetime = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
-          # print(resp_json["campsites"][campsite]["availabilities"][date])
           # save if date is in the future
           if date_in_datetime > datetime.today():
+            # print(resp_json["campsites"][campsite]["availabilities"][date])
             available.append(date_in_datetime)
 
       if available:
@@ -86,4 +92,19 @@ automate.campsites(recreation_map["Yosemite Upper Pines"], "2020", "08")
 automate.campsites(recreation_map["Yosemite Wawona"], "2020", "07")
 automate.campsites(recreation_map["Yosemite North Pines"], "2020", "07")
 automate.campsites(recreation_map["Yosemite Lower Pines"], "2020", "07")
-automate.campsites(recreation_map["Yosemite Tuolumne Meadows"], "2020", "07") 
+automate.campsites(recreation_map["Yosemite Tuolumne Meadows"], "2020", "07")
+
+automate.campsites(recreation_map["Sequoia & Kings Canyon Lodgepole"], "2020", "06")
+automate.campsites(recreation_map["Sequoia & Kings Canyon Lodgepole"], "2020", "07")
+
+automate.campsites(recreation_map["Sequoia & Kings Canyon Dorst Creek"], "2020", "06")
+automate.campsites(recreation_map["Sequoia & Kings Canyon Dorst Creek"], "2020", "07")
+
+# automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "06")
+# automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "07")
+
+automate.campsites(recreation_map["Sequoia & Kings Canyon Potwisha"], "2020", "06")
+automate.campsites(recreation_map["Sequoia & Kings Canyon Potwisha"], "2020", "07")
+
+automate.campsites(recreation_map["Death Valley Furnace Creek"], "2020", "11")
+automate.campsites(recreation_map["Joshua Tree Indian Cove"], "2020", "11")
