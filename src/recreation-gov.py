@@ -41,13 +41,12 @@ class test():
     resp = requests.get(url, headers=headers)
     resp_json = resp.json()
 
-    print(list(recreation_map.keys())[list(recreation_map.values()).index(campground_id)], month)
-    # print(url)
+    print(list(recreation_map.keys())[list(recreation_map.values()).index(campground_id)], month, ":", url)
     for campsite in resp_json["campsites"]:
       available = [];
       site = resp_json["campsites"][campsite]["site"]
       for date in resp_json["campsites"][campsite]["availabilities"]:
-        if resp_json["campsites"][campsite]["availabilities"][date] not in ["Reserved", "Not Available", "Not Reservable Management"]:
+        if resp_json["campsites"][campsite]["availabilities"][date] not in ["Reserved", "Not Available", "Not Reservable Management", "Not Reservable"]:
           date_in_datetime = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
           # save if date is in the future
           if (date_in_datetime > datetime.today()) and (not re.match("Group", site)):        
@@ -103,13 +102,11 @@ automate.campsites(recreation_map["Sequoia & Kings Canyon Lodgepole"], "2020", "
 automate.campsites(recreation_map["Sequoia & Kings Canyon Dorst Creek"], "2020", "06")
 automate.campsites(recreation_map["Sequoia & Kings Canyon Dorst Creek"], "2020", "07")
 
-# TODO
-# automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "06")
-# automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "07")
+automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "06")
+automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "07")
 
 automate.campsites(recreation_map["Sequoia & Kings Canyon Potwisha"], "2020", "06")
 automate.campsites(recreation_map["Sequoia & Kings Canyon Potwisha"], "2020", "07")
 
-# TODO 
 automate.campsites(recreation_map["Death Valley Furnace Creek"], "2020", "11")
-# automate.campsites(recreation_map["Joshua Tree Indian Cove"], "2020", "11")
+automate.campsites(recreation_map["Joshua Tree Indian Cove"], "2020", "11")
