@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 import requests
 import json
 from datetime import datetime
+import re
 
 recreation_map = {
   'Yosemite Day Use Tickets': '300015',  
@@ -32,7 +33,7 @@ class test():
     chrome_options.add_argument("--disable-gpu")
     self.driver = webdriver.Chrome(options=chrome_options)
 
-  # Campsite(s)
+  # Campsite(s), recreation.gov
   # https://www.recreation.gov/api/camps/availability/campground/232447/month?start_date=2020-07-01T00%3A00%3A00.000Z
   def campsites(self, campground_id, year, month):
     url = f'https://www.recreation.gov/api/camps/availability/campground/{campground_id}/month?start_date={year}-{month}-01T00%3A00%3A00.000Z'
@@ -41,23 +42,25 @@ class test():
     resp_json = resp.json()
 
     print(list(recreation_map.keys())[list(recreation_map.values()).index(campground_id)], month)
+    # print(url)
     for campsite in resp_json["campsites"]:
       available = [];
+      site = resp_json["campsites"][campsite]["site"]
       for date in resp_json["campsites"][campsite]["availabilities"]:
         if resp_json["campsites"][campsite]["availabilities"][date] not in ["Reserved", "Not Available", "Not Reservable Management"]:
           date_in_datetime = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
           # save if date is in the future
-          if date_in_datetime > datetime.today():
+          if (date_in_datetime > datetime.today()) and (not re.match("Group", site)):        
             # print(resp_json["campsites"][campsite]["availabilities"][date])
             available.append(date_in_datetime)
 
       if available:
-        print(campsite, end = ' -> '),
+        print(site, end = ' -> '),
         for item in available:
-          print(f'{item.month}-{item.day}-{item.year} ({["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][date_in_datetime.weekday()]})', end = ' | ')
+          print(f'{item.day} ({["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][item.weekday()]})', end = ' | ')
         print()
         
-  # National Park Ticketed Entry
+  # National Park Ticketed Entry, recreation.gov
   # https://www.recreation.gov/ticket/facility/300015 
   # https://www.recreation.gov/api/ticket/availability/facility/300015/monthlyAvailabilitySummaryView?year=2020&month=09&inventoryBucket=FIT
   def day_use_tickets(self, park_id, year, month):
@@ -77,7 +80,7 @@ class test():
     print(list(recreation_map.keys())[list(recreation_map.values()).index(park_id)], month)
     if available:
       for item in available:
-        print(f'{item.month}-{item.day}-{item.year} ({["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][date_in_datetime.weekday()]})', end = ' | ')
+        print(f'{item.day} ({["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][item.weekday()]})', end = ' | ')
       print()
       
 automate = test()
@@ -100,11 +103,13 @@ automate.campsites(recreation_map["Sequoia & Kings Canyon Lodgepole"], "2020", "
 automate.campsites(recreation_map["Sequoia & Kings Canyon Dorst Creek"], "2020", "06")
 automate.campsites(recreation_map["Sequoia & Kings Canyon Dorst Creek"], "2020", "07")
 
+# TODO
 # automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "06")
 # automate.campsites(recreation_map["Sequoia & Kings Canyon Sunset"], "2020", "07")
 
 automate.campsites(recreation_map["Sequoia & Kings Canyon Potwisha"], "2020", "06")
 automate.campsites(recreation_map["Sequoia & Kings Canyon Potwisha"], "2020", "07")
 
+# TODO 
 automate.campsites(recreation_map["Death Valley Furnace Creek"], "2020", "11")
-automate.campsites(recreation_map["Joshua Tree Indian Cove"], "2020", "11")
+# automate.campsites(recreation_map["Joshua Tree Indian Cove"], "2020", "11")
